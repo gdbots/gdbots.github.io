@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema xmlns="http://gdbots.io/pbj/xsd"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://gdbots.io/pbj/xsd"
+    elementFormDefault="qualified">
+
+  <xsd:annotation>
+    <xsd:documentation><![CDATA[
+      This is the XML Schema for the Pbj Schema IDL used by the Pbjc.
+    ]]></xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="pbj-schema">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="schema" type="schema" minOccurs="1" maxOccurs="1" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other"/>
+      </xsd:sequence>
+      <xsd:anyAttribute namespace="##other"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="schema">
+    <xsd:sequence>
+      <xsd:element name="fields" type="fields" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="mixins" type="schemaCurieMajorIds" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="php-options" type="schemaPhpOptions" minOccurs="0" maxOccurs="1" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="schemaIdentifierRegex" use="required" />
+    <xsd:attribute name="extends" type="schemaCurieMajorRegex" use="optional" />
+    <xsd:attribute name="mixin" type="xsd:boolean" default="false" />
+    <xsd:attribute name="deprecated" type="xsd:boolean" default="false" />
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:complexType name="fields">
+    <xsd:sequence>
+      <xsd:element name="field" type="field" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:complexType name="field">
+    <xsd:sequence>
+      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="default" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="enum" type="fieldEnum" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="any-of" type="schemaCurieIds" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="php-options" type="fieldPhpOptions" minOccurs="0" maxOccurs="1" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="required" />
+    <xsd:attribute name="type" type="fieldType" use="required" />
+    <xsd:attribute name="required" type="xsd:boolean" default="false" />
+    <xsd:attribute name="min" type="xsd:integer" use="optional" />
+    <xsd:attribute name="max" type="xsd:integer" use="optional" />
+    <xsd:attribute name="precision" type="xsd:integer" use="optional" />
+    <xsd:attribute name="scale" type="xsd:integer" use="optional" />
+    <xsd:attribute name="rule" type="fieldRule" use="optional" />
+    <xsd:attribute name="pattern" type="xsd:string" use="optional" />
+    <xsd:attribute name="format" type="fieldFormat" use="optional" />
+    <xsd:attribute name="use-type-default" type="xsd:boolean" default="false" />
+    <xsd:attribute name="overridable" type="xsd:boolean" default="false" />
+    <xsd:attribute name="deprecated" type="xsd:boolean" default="false" />
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:complexType name="schemaCurieMajorIds">
+    <xsd:sequence>
+      <xsd:element name="curie-major" type="schemaCurieMajorRegex" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:complexType name="schemaCurieIds">
+    <xsd:sequence>
+      <xsd:element name="curie" type="schemaCurieRegex" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:complexType name="schemaPhpOptions">
+    <xsd:sequence>
+      <xsd:element name="namespace" type="xsd:string" minOccurs="1" maxOccurs="1" />
+      <xsd:element name="insertion-points" type="insertionPointsPhpOptions" minOccurs="0" maxOccurs="1" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:complexType name="insertionPointsPhpOptions">
+    <xsd:sequence>
+      <xsd:element name="imports" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="methods" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:complexType name="fieldEnum">
+    <xsd:attribute name="id" type="enumIdRegex" use="required" />
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:simpleType name="enumIdRegex">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([a-z0-9-]+):([a-z0-9\.-]+):([a-z0-9-]+)" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="fieldPhpOptions">
+    <xsd:sequence>
+      <xsd:element name="classname" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="default" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:simpleType name="schemaCurieRegex">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([a-z0-9-]+)?:?([a-z0-9-]+):([a-z0-9\.-]+):([a-z0-9-]+)?:([a-z0-9-]+)" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="schemaCurieMajorRegex">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([a-z0-9-]+)?:?([a-z0-9-]+):([a-z0-9\.-]+):([a-z0-9-]+)?:([a-z0-9-]+)(:v?([0-9]+)(-[0-9]+-[0-9]+)?)?" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="schemaIdentifierRegex">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([a-z0-9-]+)?:?([a-z0-9-]+):([a-z0-9\.-]+):([a-z0-9-]+)?:([a-z0-9-]+)(:v?([0-9]+)(-[0-9]+-[0-9]+)?)?" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="fieldType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="big-int" />
+      <xsd:enumeration value="binary" />
+      <xsd:enumeration value="blob" />
+      <xsd:enumeration value="boolean" />
+      <xsd:enumeration value="date" />
+      <xsd:enumeration value="date-time" />
+      <xsd:enumeration value="decimal" />
+      <xsd:enumeration value="float" />
+      <xsd:enumeration value="geo-point" />
+      <xsd:enumeration value="identifier" />
+      <xsd:enumeration value="int" />
+      <xsd:enumeration value="int-enum" />
+      <xsd:enumeration value="medium-blob" />
+      <xsd:enumeration value="medium-int" />
+      <xsd:enumeration value="medium-text" />
+      <xsd:enumeration value="message" />
+      <xsd:enumeration value="message-ref" />
+      <xsd:enumeration value="microtime" />
+      <xsd:enumeration value="signed-big-int" />
+      <xsd:enumeration value="signed-int" />
+      <xsd:enumeration value="signed-medium-int" />
+      <xsd:enumeration value="signed-small-int" />
+      <xsd:enumeration value="signed-tiny-int" />
+      <xsd:enumeration value="small-int" />
+      <xsd:enumeration value="string" />
+      <xsd:enumeration value="string-enum" />
+      <xsd:enumeration value="text" />
+      <xsd:enumeration value="time-uuid" />
+      <xsd:enumeration value="timestamp" />
+      <xsd:enumeration value="tiny-int" />
+      <xsd:enumeration value="uuid" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="fieldRule">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="single" />
+      <xsd:enumeration value="set" />
+      <xsd:enumeration value="list" />
+      <xsd:enumeration value="map" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="fieldFormat">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="unknown" />
+      <xsd:enumeration value="date" />
+      <xsd:enumeration value="date-time" />
+      <xsd:enumeration value="dated-slug" />
+      <xsd:enumeration value="email" />
+      <xsd:enumeration value="hashtag" />
+      <xsd:enumeration value="hostname" />
+      <xsd:enumeration value="ipv4" />
+      <xsd:enumeration value="ipv6" />
+      <xsd:enumeration value="slug" />
+      <xsd:enumeration value="uri" />
+      <xsd:enumeration value="url" />
+      <xsd:enumeration value="uuid" />
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

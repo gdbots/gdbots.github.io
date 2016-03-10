@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema xmlns="http://gdbots.io/pbj/xsd"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://gdbots.io/pbj/xsd"
+    elementFormDefault="qualified">
+
+  <xsd:annotation>
+    <xsd:documentation><![CDATA[
+      This is the XML Schema for the Pbj Enum IDL used by the Pbjc.
+    ]]></xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="pbj-enums">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="enums" type="enums" minOccurs="0" maxOccurs="1" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other"/>
+      </xsd:sequence>
+      <xsd:anyAttribute namespace="##other"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="enums">
+    <xsd:sequence>
+      <xsd:element name="enum" type="enumItem" minOccurs="1" maxOccurs="unbounded" />
+      <xsd:element name="php-options" type="enumPhpOptions" minOccurs="0" maxOccurs="1" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:attribute name="namespace" type="namespaceRegex" use="required" />
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:simpleType name="namespaceRegex">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([a-z0-9-]+):([a-z0-9\.-]+)" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="enumItem">
+    <xsd:sequence>
+      <xsd:element name="option" type="enumOption" minOccurs="1" maxOccurs="unbounded" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="required" />
+    <xsd:attribute name="type" type="enumType" use="required" />
+    <xsd:attribute name="deprecated" type="xsd:boolean" default="false" />
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:simpleType name="enumType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="string" />
+      <xsd:enumeration value="int" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="enumOption">
+    <xsd:attribute name="key" type="xsd:string" use="required" />
+    <xsd:attribute name="value" type="xsd:string" use="required" />
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+
+  <xsd:complexType name="enumPhpOptions">
+    <xsd:sequence>
+      <xsd:element name="namespace" type="xsd:string" minOccurs="1" maxOccurs="1" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" />
+  </xsd:complexType>
+</xsd:schema>
